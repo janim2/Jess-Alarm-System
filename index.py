@@ -250,9 +250,12 @@ class AlarmClock:
                 
     def trigger_alarm(self, alarm: Dict):
         """Trigger the alarm"""
+        print(f"🚨 ALARM TRIGGERED: {alarm['label']} at {alarm['hour']:02d}:{alarm['minute']:02d}")
+        
         try:
-            # Play sound
-            self.play_alarm_sound()
+            # Play sound in separate thread to not block
+            sound_thread = threading.Thread(target=self.play_alarm_sound, daemon=True)
+            sound_thread.start()
             
             # Show popup
             self.root.after(0, lambda: self.show_alarm_popup(alarm))
